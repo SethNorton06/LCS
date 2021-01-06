@@ -1,0 +1,6 @@
+C:\Users\sethn\Documents\Algorithms\SethNorton_LCSLab\SethNorton_LCSLab\bin\Debug\SethNorton_LCSLab.exe.config
+C:\Users\sethn\Documents\Algorithms\SethNorton_LCSLab\SethNorton_LCSLab\bin\Debug\SethNorton_LCSLab.exe
+C:\Users\sethn\Documents\Algorithms\SethNorton_LCSLab\SethNorton_LCSLab\bin\Debug\SethNorton_LCSLab.pdb
+C:\Users\sethn\Documents\Algorithms\SethNorton_LCSLab\SethNorton_LCSLab\obj\Debug\SethNorton_LCSLab.csprojAssemblyReference.cache
+C:\Users\sethn\Documents\Algorithms\SethNorton_LCSLab\SethNorton_LCSLab\obj\Debug\SethNorton_LCSLab.exe
+C:\Users\sethn\Documents\Algorithms\SethNorton_LCSLab\SethNorton_LCSLab\obj\Debug\SethNorton_LCSLab.pdb

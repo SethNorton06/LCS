@@ -1,0 +1,222 @@
+﻿//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Project: Lab LCS
+//  File Name: LCSLabDriver.cs
+//  Description: Finds the LCS of two strings, displays the LCS table and a table describing how the LCS table was found
+//  Course: CSCI 3230-001 - Algorithms
+//  Author: Seth Norton, nortonsp@etsu.edu
+//  Created: Tuesday, March 17,2020
+//  Copyright: Seth Norton, 2020
+//
+//////////////////////////////////////////////////////////////////////////////////////
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+/// <summary>
+/// The name space responsible for finding the LCS of two strings
+/// </summary>
+namespace SethNorton_LCSLab
+{
+    /// <summary>
+    /// The class to find the LCS of two strings
+    /// </summary>
+    class LCSLabDriver
+    {
+        /// <summary>
+        /// Defines the entry point of the application
+        /// </summary>
+        /// <param name="args">The arguments for the command line</param>
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Please enter the first string:");
+            string firstString = Console.ReadLine();
+            Console.WriteLine("Please enter the second string:");
+            string secondString = Console.ReadLine();
+            string stringLCS = "";
+            char[,] cTable;
+            //Calculate first (LCS) (B Table) table and the second table (known as the C Table)
+            int[,] LCSTable = LCS(firstString, secondString, out cTable);
+            //Display first (LCS) (B Table) table
+            Console.Write("      ");    //used for spacing
+            for (int i = 0; i < secondString.Length; i++)
+            {
+                Console.Write(secondString[i] + "  ");
+            }
+            Console.WriteLine();
+            for (int i = 0; i < LCSTable.GetLength(0); i++)
+            {
+                if(i > 0)
+                {
+                    Console.Write(firstString[i - 1] + "  ");
+                }
+                else
+                {
+                    Console.Write("   ");
+                }
+                for (int j = 0; j < LCSTable.GetLength(1); j++)
+                {
+                    Console.Write(LCSTable[i, j]+ "  ");
+                }
+                Console.WriteLine();
+            }
+            Console.WriteLine();        //used for spacing in output
+
+
+            //Display second table (C Table)
+            Console.OutputEncoding = System.Text.Encoding.Unicode;
+            Console.Write("      ");    //used for spacing
+            for (int i = 0; i < secondString.Length; i++)
+            {
+                Console.Write(secondString[i] + "  ");
+            }
+            Console.WriteLine();
+            for (int i = 0; i < cTable.GetLength(0); i++)
+            {
+                if (i > 0)
+                {
+                    Console.Write(firstString[i - 1] + "  ");
+                }
+                else
+                {
+                    Console.Write("   ");
+                }
+                for (int j = 0; j < cTable.GetLength(1); j++)
+                {
+                    Console.Write(cTable[i, j] + "  ");
+                }
+                Console.WriteLine();
+            }
+            Console.WriteLine();        //used for spacing in output
+
+
+
+
+
+            //Display the LCS (using the C and B Tables)
+            //start at the rightmost bottom corner
+            int n = firstString.Length;
+            int m = secondString.Length;
+            while(n > 0 && m > 0)
+            {
+                if(cTable[n,m] == 0)
+                {
+                    break;
+                }
+                //if it is a diagonal add a letter to the LCS and go diagonal (up left)
+                if(cTable[n, m] == 'd')
+                {
+                    stringLCS += firstString[n-1];
+                    n--;
+                    m--;
+                }
+                //You must go up
+                else if(LCSTable[n-1, m] < LCSTable[n,m])
+                {
+                    m--;
+                }
+                else if(LCSTable[n, m-1] < LCSTable[n, m])
+                {
+                    n--;
+                }
+                else
+                {
+                    n--;
+                }
+               
+            }
+            string revisedString = "";  //The reversed string of the string we found in the previous loop
+            for (int i = stringLCS.Length - 1; i >= 0; i--)
+            {
+                revisedString += stringLCS[i];
+            }
+
+
+
+
+
+            Console.WriteLine(revisedString);
+
+            //Wait for user confirmation to end the program
+            Console.ReadLine();
+
+
+        }
+
+        /// <summary>
+        /// Makes the LCS table and the table with the arrows to show how the table was made
+        /// </summary>
+        /// <param name="s">The second string</param>
+        /// <param name="t">The first string</param>
+        /// <param name="unicodeTable">The unicode table</param>
+        /// <returns></returns>
+        private static int[,] LCS(string s, string t, out char[,] unicodeTable)
+        {
+            string LCS = "";    //The Longest Common Subsequence
+
+            char[] firstStringChar = new char[t.Length];    //character array of the first string
+            char[] secondStringChar = new char[s.Length];   //character array of the second string
+
+            int[,] table = new int[secondStringChar.Length + 1, firstStringChar.Length + 1];    //stores the LCS table (+1 because the table is one longer on each dimension for the table)
+            unicodeTable = new char[secondStringChar.Length + 1, firstStringChar.Length + 1];    //stores the C table (+1 because the table is one longer on each dimension for the table) (debugging table)
+
+
+            //copying the characters in the string into two char arrays
+            for (int i = 0; i < t.Length; i++)
+            {
+                firstStringChar[i] = t[i];
+            }
+            for (int i = 0; i < s.Length; i++)
+            {
+                secondStringChar[i] = s[i];
+            }
+
+
+            for (int i = 0; i < unicodeTable.GetLength(1); i++)
+            {
+                unicodeTable[0, i] = '0';
+            }
+          
+            //When indexing for the table always place in +1 above each row and column index
+
+
+
+            //first string is j and the second string is i
+            for (int i = 0; i < secondStringChar.Length; i++)
+            {
+                unicodeTable[i + 1, 0] = '0';
+                //Do not worry about first row (already initialized to zero)
+                for (int j = 0; j < firstStringChar.Length; j++)
+                {
+                    if (secondStringChar[i] == firstStringChar[j])
+                    {
+
+                        //The diagonal plus one
+                        unicodeTable[i + 1, j + 1] = 'd';
+                        table[i + 1, j + 1] = table[i, j] + 1;
+                    }
+                    else
+                    {
+                        //check to see if the cell on top is greater or the cell to the left is greater
+                        if (table[i + 1, j] > table[i, j + 1])
+                        {
+                           
+                            unicodeTable[i + 1, j + 1] = '\u2190';
+                            table[i + 1, j + 1] = table[i + 1, j];
+                        }
+                        else
+                        {
+                            unicodeTable[i + 1, j + 1] = '\u2191';
+                            table[i + 1, j + 1] = table[i, j + 1];
+                        }
+                    }
+
+                    
+                }
+            }
+            return table;
+        }
+    }
+}
